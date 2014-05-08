@@ -9,10 +9,13 @@ private_key = ENV['key'] || "/home/jpratt/.vagrant.d/insecure_private_key"
 SSH = "ssh -i #{private_key} -p #{port} -o StrictHostKeyChecking=no -l #{user} #{client}"
 REPO = 'https://github.com/blunxy/puppety.git'
 
-task :default =>  :set_up_papply
-task :set_up_papply => :pull_puppet_structure
-task :pull_puppet_structure => :install_puppet
-task :install_puppet => :set_host
+task :default do
+  Rake::Task["set_host"].execute
+  Rake::Task["install_puppet"].execute
+  Rake::Task["install_git"].execute
+  Rake::Task["pull_puppet_structure"].execute
+  Rake::Task["set_up_papply"].execute
+end
 
 desc "Set hostname on ENV['CLIENT'] to ENV['HOSTNAME']"
 task :set_host  do
@@ -33,16 +36,20 @@ task :install_puppet do
     ssh_command "sudo apt-get update && sudo apt-get -y install puppet"
 end
 
+desc "Install Git"
+task :install_git do
+  ssh_command "sudo apt-get -y install git"
+end
+
 desc "Pull down Puppet structure from Github."
 task :pull_puppet_structure do
-  ssh_command "sudo apt-get -y install git"
   ssh_command "sudo rm -rf /etc/puppet"
   ssh_command "sudo git clone #{REPO} /etc/puppet"
 end
 
 desc "Set up papply script."
 task :set_up_papply do
-  ssh_command "sudo puppet apply /etc/puppet/modules/convenient_scripts/manifests"
+  ssh_command "sudo puppet apply --modulepath=/etc/puppet/modules -e \"include convenient_scripts\" -v"
 end
 
 
