@@ -1,4 +1,3 @@
 node 'app' {
-  include keychain
-  include puppet
+    include convenient_scripts
 }
