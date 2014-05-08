@@ -1,5 +1,6 @@
+REPO = 'https://github.com/blunxy/puppety.git'
 client = ENV['client'] || "localhost"
-hostname = ENV['hostname']
+hostname = ENV['hostname'] || "app"
 fqd = ENV['fqd'] || "#{hostname}.local"
 port = ENV['port'] || 2222
 user = ENV['user'] || "vagrant"
@@ -8,7 +9,7 @@ command = "ssh -i #{private_key} -p #{port} -o StrictHostKeyChecking=no -l #{use
 
 
 desc "Set hostname on ENV['CLIENT'] to ENV['HOSTNAME']"
-task :set_host do
+task :set_host  do
     rename_hostname = "sudo sed -i \"s/precise64/#{hostname}/\" /etc/hostname"
     rename_hosts = "sudo sed -i \"s/precise64/#{fqd} #{hostname}/\" /etc/hosts"
     restart_hostname = "sudo service hostname restart"
