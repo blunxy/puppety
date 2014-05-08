@@ -1,0 +1,16 @@
+class keychain {
+  package { "keychain": ensure => present }
+
+  file { '/home/vagrant/.bash_profile':
+    source => 'puppet:///modules/keychain/.bash_profile',
+  }
+
+  file { '/home/vagrant/.ssh/puppet-deploy':
+    source => 'puppet:///modules/keychain/puppet-deploy',
+  }
+
+  file { '/home/vagrant/.ssh/puppet-deploy.pub':
+    source => 'puppet:///modules/keychain/puppet-deploy.pub',
+  }
+
+}
