@@ -9,8 +9,9 @@ private_key = ENV['key'] || "/home/jpratt/.vagrant.d/insecure_private_key"
 SSH = "ssh -i #{private_key} -p #{port} -o StrictHostKeyChecking=no -l #{user} #{client}"
 REPO = 'https://github.com/blunxy/puppety.git'
 
-task :default =>  :install_puppet
-
+task :default =>  :set_up_papply
+task :set_up_papply => :pull_puppet_structure
+task :pull_puppet_structure => :install_puppet
 task :install_puppet => :set_host
 
 desc "Set hostname on ENV['CLIENT'] to ENV['HOSTNAME']"
@@ -39,9 +40,9 @@ task :pull_puppet_structure do
   ssh_command "sudo git clone #{REPO} /etc/puppet"
 end
 
-desc "Run Puppet manifest."
-task :run_puppet_manifest do
-  ssh_command "sudo puppet apply /etc/puppet/manifests"
+desc "Set up papply script."
+task :set_up_papply do
+  ssh_command "sudo puppet apply /etc/puppet/modules/convenient_scripts/manifests"
 end
 
 
