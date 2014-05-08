@@ -45,6 +45,7 @@ desc "Pull down Puppet structure from Github."
 task :pull_puppet_structure do
   ssh_command "sudo rm -rf /etc/puppet"
   ssh_command "sudo git clone #{REPO} /etc/puppet"
+  ssh_command "sudo rm -f /etc/puppet/Rakefile"
 end
 
 desc "Set up papply script."
